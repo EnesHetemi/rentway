@@ -1,4 +1,4 @@
-import Image from "next/image"; 
+import Image from "next/image";
 import { motion } from "framer-motion";
 import CustomImage from "@/assets/images/images.png";
 import Button from "components/shared/Button";
@@ -22,6 +22,7 @@ export default function Home() {
   );
 
   const [posts, setPosts] = useState<Post[] | null>(null);
+  const [selectedBrand, setSelectedBrand] = useState("");
 
   useEffect(() => {
     if (initialPosts) {
@@ -41,6 +42,36 @@ export default function Home() {
       setPosts(posts.filter((post) => post.id !== id));
     }
   };
+
+  const cars = [
+    {
+      title: "BMW X5 2021",
+      brand: "BMW",
+      image: "",
+      price: "45€",
+      fuel: "Diesel",
+      transmission: "Automatik",
+      mileage: "95,000",
+    },
+    {
+      title: "Audi A4 2020",
+      brand: "Audi",
+      image: "",
+      price: "38€",
+      fuel: "Benzinë",
+      transmission: "Manual",
+      mileage: "85,000",
+    },
+    {
+      title: "Volkswagen Golf 7",
+      brand: "Volkswagen",
+      image: "",
+      price: "30€",
+      fuel: "Diesel",
+      transmission: "Automatik",
+      mileage: "110,000",
+    },
+  ];
 
   return (
     <div className="pt-14">
@@ -92,32 +123,29 @@ export default function Home() {
             <h2 className="text-4xl font-bold mb-6 text-blue-500">
               Pse të zgjedhësh RentWay?
             </h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              <CarCard
-                title="BMW X5 2021"
-                image=""
-                price="45€"
-                fuel="Diesel"
-                transmission="Automatik"
-                mileage="95,000"
-              />
-              <CarCard
-                title="Audi A4 2020"
-                image=""
-                price="38€"
-                fuel="Benzinë"
-                transmission="Manual"
-                mileage="85,000"
-              />
 
-            <CarCard
-              title="Volkswagen Golf 7"
-              image=""
-              price="30€"
-              fuel="Diesel"
-              transmission="Automatik"
-              mileage="110,000"
-            />
+            <div className="mb-6">
+              <label className="block text-lg font-semibold text-gray-800 mb-2">
+                Filtro sipas markës
+              </label>
+              <select
+                value={selectedBrand}
+                onChange={(e) => setSelectedBrand(e.target.value)}
+                className="p-3 rounded-xl border border-gray-300 bg-white text-gray-700 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400 transition duration-200"
+              >
+                <option value="">Të gjitha</option>
+                <option value="BMW">🚘 BMW</option>
+                <option value="Audi">🚗 Audi</option>
+                <option value="Volkswagen">🚙 Volkswagen</option>
+              </select>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              {cars
+                .filter((car) => selectedBrand === "" || car.brand === selectedBrand)
+                .map((car, idx) => (
+                  <CarCard key={idx} {...car} />
+                ))}
             </div>
           </div>
         </motion.section>
