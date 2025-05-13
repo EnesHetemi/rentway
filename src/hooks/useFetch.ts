@@ -17,7 +17,20 @@ function useFetch<T>(url: string) {
       .finally(() => setLoading(false));
   }, [url]);
 
-  return { data, loading, error };
+
+  const remove = async (deleteUrl: string) => {
+    const res = await fetch(deleteUrl, {
+      method: "DELETE",
+    });
+
+    if (!res.ok) {
+      throw new Error("Fshirja dështoi!");
+    }
+
+    return true;
+  };
+
+  return { data, loading, error, remove };
 }
 
 export default useFetch;
