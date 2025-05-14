@@ -65,7 +65,7 @@ export default function AdminPanel() {
                 <p className="text-gray-800 font-bold mb-4">{car.price} €/ditë</p>
 
                 <div className="flex justify-center gap-4">
-                  <Link href={`/admin/edit/${car._id}`}>
+                  <Link href={`/update/cars/${car._id}`}>
                     <button className="px-4 py-2 bg-yellow-500 text-white rounded hover:bg-yellow-600">
                       Përditëso
                     </button>
@@ -89,7 +89,7 @@ export default function AdminPanel() {
       )}
 
       <div className="text-center mt-10">
-        <Link href="/admin/create">
+        <Link href="/create/Cars">
           <button className="px-6 py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700">
             Shto Veturë të Re
           </button>

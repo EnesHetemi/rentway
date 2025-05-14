@@ -6,6 +6,8 @@ function useFetch<T>(url: string) {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    if (!url) return;
+
     setLoading(true);
     fetch(url)
       .then((res) => {
@@ -30,7 +32,27 @@ function useFetch<T>(url: string) {
     return true;
   };
 
-  return { data, loading, error, remove };
+
+  const put = async (updateUrl: string, body: Partial<T>) => {
+    try {
+      const res = await fetch(updateUrl, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(body),
+      });
+
+      if (!res.ok) throw new Error("Dështoi përditësimi i të dhënave");
+
+      return true;
+    } catch (err: any) {
+      console.error("Gabim në PUT:", err);
+      return false;
+    }
+  };
+
+  return { data, loading, error, remove, put };
 }
 
 export default useFetch;
