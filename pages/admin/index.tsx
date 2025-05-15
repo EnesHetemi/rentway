@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import useFetch from "@/hooks/useFetch";
 import { useRouter } from "next/router";
 import Link from "next/link";
+import { getSession } from "next-auth/react";
 
 export interface Car {
   _id: string;
@@ -40,7 +41,9 @@ export default function AdminPanel() {
 
   return (
     <div className="pt-14 px-6 bg-gray-100 min-h-screen">
-      <h1 className="text-4xl font-bold py-10 text-center text-blue-700">Paneli i Administratorit</h1>
+      <h1 className="text-4xl font-bold py-10 text-center text-blue-700">
+        Paneli i Administratorit
+      </h1>
 
       {loading ? (
         <div className="flex justify-center py-20">
@@ -57,12 +60,20 @@ export default function AdminPanel() {
                 animate={{ scale: 1 }}
                 transition={{ duration: 0.6 }}
               >
-                <img src={car.image} alt={car.title} className="w-full h-40 object-cover rounded-md mb-4" />
+                <img
+                  src={car.image}
+                  alt={car.title}
+                  className="w-full h-40 object-cover rounded-md mb-4"
+                />
                 <h2 className="text-2xl font-bold text-blue-600">{car.title}</h2>
                 <p className="text-gray-600">{car.brand}</p>
-                <p className="text-gray-600">{car.fuel} • {car.transmission}</p>
+                <p className="text-gray-600">
+                  {car.fuel} • {car.transmission}
+                </p>
                 <p className="text-gray-600">{car.mileage} km</p>
-                <p className="text-gray-800 font-bold mb-4">{car.price} €/ditë</p>
+                <p className="text-gray-800 font-bold mb-4">
+                  {car.price} €/ditë
+                </p>
 
                 <div className="flex justify-center gap-4">
                   <Link href={`/update/cars/${car._id}`}>
@@ -100,3 +111,19 @@ export default function AdminPanel() {
 }
 
 AdminPanel.displayName = "Admin Panel | RentWay";
+
+
+export async function getServerSideProps(context: any) {
+  const session = await getSession(context);
+
+  if (!session || session.user?.role !== "admin") {
+    return {
+      redirect: {
+        destination: "/sign-in",
+        permanent: false,
+      },
+    };
+  }
+
+  
+}

@@ -4,28 +4,28 @@ import classNames from "classnames";
 import { useState } from "react";
 import Logo from "@/assets/icons/logo.svg";
 import ThemeToggle from "components/ThemeToggle";
+import { useSession, signOut } from "next-auth/react";
 
 const navItems = [
   { name: "Home", path: "/" },
   { name: "About", path: "/about" },
   { name: "Contact", path: "/contact" },
-  { name: "Admin", path: "/admin" },
 ];
 
 export default function Header() {
   const router = useRouter();
   const [menuOpen, setMenuOpen] = useState(false);
+  const { data: session, status } = useSession();
 
   return (
     <header className="fixed top-0 w-full z-50 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 shadow-sm transition">
       <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
-        
         <Link href="/" className="flex items-center gap-2">
           <img src={Logo.src} alt="Logo" className="h-10 w-auto" />
           <span className="text-xl font-bold text-gray-900 dark:text-white">RentWay</span>
         </Link>
 
-        
+
         <nav className="hidden md:flex gap-8 items-center">
           {navItems.map((item) => (
             <Link
@@ -41,10 +41,37 @@ export default function Header() {
               {item.name}
             </Link>
           ))}
+
           <ThemeToggle />
+
+          <div className="flex gap-3 items-center">
+            {status === "authenticated" ? (
+              <button
+                onClick={() => signOut({ callbackUrl: "/sign-in" })}
+                className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
+              >
+                Dil
+              </button>
+            ) : (
+              <>
+                <button
+                  onClick={() => router.push("/sign-up")}
+                  className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+                >
+                  Regjistrohu
+                </button>
+                <button
+                  onClick={() => router.push("/sign-in")}
+                  className="px-4 py-2 bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-white rounded hover:bg-gray-300 dark:hover:bg-gray-600"
+                >
+                  Kyçu
+                </button>
+              </>
+            )}
+          </div>
         </nav>
 
-        
+
         <div className="md:hidden flex items-center gap-2">
           <ThemeToggle />
           <button
@@ -56,9 +83,9 @@ export default function Header() {
         </div>
       </div>
 
-      
+
       {menuOpen && (
-        <div className="md:hidden bg-white dark:bg-gray-900 px-4 pb-4 pt-2">
+        <div className="md:hidden bg-white dark:bg-gray-900 px-4 pb-4 pt-2 space-y-2">
           {navItems.map((item) => (
             <Link
               key={item.path}
@@ -74,6 +101,41 @@ export default function Header() {
               {item.name}
             </Link>
           ))}
+
+          <div className="pt-4 border-t border-gray-300 dark:border-gray-700">
+            {status === "authenticated" ? (
+              <button
+                onClick={() => {
+                  signOut({ callbackUrl: "/sign-in" });
+                  setMenuOpen(false);
+                }}
+                className="w-full py-2 bg-red-500 text-white rounded hover:bg-red-600"
+              >
+                Dil
+              </button>
+            ) : (
+              <div className="space-y-2">
+                <button
+                  onClick={() => {
+                    router.push("/sign-up");
+                    setMenuOpen(false);
+                  }}
+                  className="w-full py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+                >
+                  Regjistrohu
+                </button>
+                <button
+                  onClick={() => {
+                    router.push("/sign-in");
+                    setMenuOpen(false);
+                  }}
+                  className="w-full py-2 bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-white rounded hover:bg-gray-300 dark:hover:bg-gray-600"
+                >
+                  Kyçu
+                </button>
+              </div>
+            )}
+          </div>
         </div>
       )}
     </header>
