@@ -1,9 +1,9 @@
-import NextAuth from "next-auth";
+import NextAuth, { AuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import dbConnect from "@/lib/mongodb";
-import User from "models/User"; // sigurohu që rruga është korrekte
+import User from "@/models/User";
 
-export default NextAuth({
+export const authOptions: AuthOptions = {
   providers: [
     CredentialsProvider({
       name: "Credentials",
@@ -13,10 +13,15 @@ export default NextAuth({
       },
       async authorize(credentials) {
         await dbConnect();
-
         const user = await User.findOne({ email: credentials?.email });
+
         if (user && credentials?.password === user.password) {
-          return { id: user._id, email: user.email, role: user.role };
+          return {
+            id: user._id.toString(),
+            email: user.email,
+            name: user.name,
+            role: user.role,
+          };
         }
 
         throw new Error("Email ose fjalëkalim i pasaktë");
@@ -25,11 +30,20 @@ export default NextAuth({
   ],
   callbacks: {
     async jwt({ token, user }) {
-      if (user) token.role = user.role;
+      
+      if (user) {
+        token.name = user.name;
+        token.role = user.role;
+        token.email = user.email;
+      }
       return token;
     },
     async session({ session, token }) {
-      if (token) session.user.role = token.role;
+      if (token) {
+        session.user.name = token.name as string;
+        session.user.role = token.role as string;
+        session.user.email = token.email as string;
+      }
       return session;
     },
   },
@@ -37,4 +51,6 @@ export default NextAuth({
     signIn: "/sign-in/index",
   },
   secret: process.env.NEXTAUTH_SECRET,
-});
+};
+
+export default NextAuth(authOptions);

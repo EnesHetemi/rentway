@@ -25,7 +25,6 @@ export default function Header() {
           <span className="text-xl font-bold text-gray-900 dark:text-white">RentWay</span>
         </Link>
 
-
         <nav className="hidden md:flex gap-8 items-center">
           {navItems.map((item) => (
             <Link
@@ -46,12 +45,25 @@ export default function Header() {
 
           <div className="flex gap-3 items-center">
             {status === "authenticated" ? (
-              <button
-                onClick={() => signOut({ callbackUrl: "/sign-in" })}
-                className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
-              >
-                Dil
-              </button>
+              <div className="relative group">
+                <button className="px-4 py-2 bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-white rounded hover:bg-gray-300 dark:hover:bg-gray-600">
+                  {session?.user?.name || "Profili"}
+                </button>
+                <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded shadow-lg hidden group-hover:block z-50">
+                  <button
+                    onClick={() => router.push("/profile/profile")}
+                    className="block w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 text-sm text-gray-900 dark:text-white"
+                  >
+                    Përditëso Profilin
+                  </button>
+                  <button
+                    onClick={() => signOut({ callbackUrl: "/sign-in" })}
+                    className="block w-full text-left px-4 py-2 text-red-600 hover:bg-gray-100 dark:hover:bg-gray-700 text-sm"
+                  >
+                    Dil
+                  </button>
+                </div>
+              </div>
             ) : (
               <>
                 <button
@@ -71,7 +83,6 @@ export default function Header() {
           </div>
         </nav>
 
-
         <div className="md:hidden flex items-center gap-2">
           <ThemeToggle />
           <button
@@ -82,7 +93,6 @@ export default function Header() {
           </button>
         </div>
       </div>
-
 
       {menuOpen && (
         <div className="md:hidden bg-white dark:bg-gray-900 px-4 pb-4 pt-2 space-y-2">
@@ -104,15 +114,26 @@ export default function Header() {
 
           <div className="pt-4 border-t border-gray-300 dark:border-gray-700">
             {status === "authenticated" ? (
-              <button
-                onClick={() => {
-                  signOut({ callbackUrl: "/sign-in" });
-                  setMenuOpen(false);
-                }}
-                className="w-full py-2 bg-red-500 text-white rounded hover:bg-red-600"
-              >
-                Dil
-              </button>
+              <div className="space-y-2">
+                <button
+                  onClick={() => {
+                    router.push("/profile/profile");
+                    setMenuOpen(false);
+                  }}
+                  className="w-full py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+                >
+                  {session?.user?.name || "Profili"}
+                </button>
+                <button
+                  onClick={() => {
+                    signOut({ callbackUrl: "/sign-in" });
+                    setMenuOpen(false);
+                  }}
+                  className="w-full py-2 bg-red-500 text-white rounded hover:bg-red-600"
+                >
+                  Dil
+                </button>
+              </div>
             ) : (
               <div className="space-y-2">
                 <button

@@ -38,7 +38,7 @@ export default function App({ Component, pageProps }: AppProps) {
   <meta name="twitter:image" content={image} />
   <meta name="twitter:image:secure" content={image} />
 </Head>
-    <SessionProvider>
+    <SessionProvider session={pageProps.session}>
       <MainLayout name={Component.displayName}>
       <Component {...pageProps} />
       </MainLayout>
