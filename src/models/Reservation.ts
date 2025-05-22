@@ -1,3 +1,4 @@
+import "@/models/Car";
 import mongoose from "mongoose";
 
 const ReservationSchema = new mongoose.Schema({
