@@ -4,6 +4,7 @@ import useFetch from "@/hooks/useFetch";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import { getSession } from "next-auth/react";
+import type { GetServerSideProps } from "next";
 
 export interface Car {
   _id: string;
@@ -18,12 +19,7 @@ export interface Car {
 
 export default function AdminPanel() {
   const router = useRouter();
-
-  const {
-    data: cars,
-    loading,
-    remove,
-  } = useFetch<Car[]>("/api/cars");
+  const { data: cars, loading, remove } = useFetch<Car[]>("/api/cars");
 
   const handleDeleteCar = async (id: string) => {
     const confirmed = confirm("A jeni i sigurt që dëshironi ta fshini këtë veturë?");
@@ -112,8 +108,7 @@ export default function AdminPanel() {
 
 AdminPanel.displayName = "Admin Panel | RentWay";
 
-
-export async function getServerSideProps(context: any) {
+export const getServerSideProps: GetServerSideProps = async (context) => {
   const session = await getSession(context);
 
   if (!session || session.user?.role !== "admin") {
@@ -125,5 +120,7 @@ export async function getServerSideProps(context: any) {
     };
   }
 
-  
-}
+  return {
+    props: {},
+  };
+};

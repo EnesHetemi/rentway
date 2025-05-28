@@ -4,10 +4,10 @@ import Image from "next/image";
 interface CarCardProps {
   title: string;
   image: string;
-  price: string;
+  price: string | number;
   fuel: string;
   transmission: string;
-  mileage: string;
+  mileage: string | number;
   onClick?: () => void;
 }
 
@@ -24,12 +24,14 @@ export default function CarCard({
     <div className="bg-white rounded-2xl shadow hover:shadow-xl transition cursor-pointer overflow-hidden border">
       
       <div className="relative h-48 w-full">
-        <Image
-          src={image}
-          alt={title}
-          fill
-          className="object-cover"
-        />
+        {image && (image.startsWith("/") || image.startsWith("http")) && (
+         <Image
+           src={image}
+           alt={title}
+           fill
+           className="object-cover"
+         />
+        )}
       </div>
 
       
